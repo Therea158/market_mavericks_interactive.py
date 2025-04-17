@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
+import plotly.graph_objects as go
+import seaborn as sns
 
-# Set color palette
+# Set color palette for teams
 colors = {
     "Tim 1": "#FF6347",  # Tomato
     "Tim 2": "#1E90FF",  # DodgerBlue
@@ -31,7 +33,9 @@ if "price_history" not in st.session_state:
 
 # Title and subtitle
 st.title("💹 Market Mavericks Simulator")
+st.markdown("<style>h1 {text-align: center;}</style>", unsafe_allow_html=True)
 st.caption("Simulasi Perdagangan 5 Komoditas untuk 5 Tim - 3 Periode")
+st.image("https://via.placeholder.com/800x400?text=Market+Mavericks+Simulator", use_column_width=True)
 
 # Display current period and prices
 st.subheader(f"🕐 Periode {st.session_state.periode} / {total_periods}")
@@ -95,6 +99,34 @@ if st.button("🚀 Jalankan Skenario"):
         st.session_state.periode += 1
     else:
         st.success("🎉 Permainan Selesai!")
+
+# Visualize wealth history with Plotly (Interactive)
+if st.session_state.periode > 1:
+    st.subheader("📊 Grafik Kekayaan Tiap Tim (Interaktif)")
+    
+    fig = go.Figure()
+
+    # Add traces for each team
+    for team in teams:
+        fig.add_trace(go.Scatter(
+            x=list(range(1, len(st.session_state.wealth_history[team]) + 1)),
+            y=st.session_state.wealth_history[team],
+            mode='lines+markers',
+            name=team,
+            line=dict(color=colors[team], width=4),
+            marker=dict(size=10)
+        ))
+
+    # Update layout
+    fig.update_layout(
+        title="Grafik Perkembangan Kekayaan Tim",
+        xaxis_title="Periode",
+        yaxis_title="Total Kekayaan ($)",
+        template="plotly_dark",
+        hovermode="x unified"
+    )
+    
+    st.plotly_chart(fig)
 
 # Reset button
 if st.button("🔄 Reset Game"):
