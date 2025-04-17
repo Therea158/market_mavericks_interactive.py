@@ -1,8 +1,5 @@
-
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 # Set color palette
 colors = {
@@ -98,19 +95,6 @@ if st.button("🚀 Jalankan Skenario"):
         st.session_state.periode += 1
     else:
         st.success("🎉 Permainan Selesai!")
-
-# Display wealth graph per team
-if st.session_state.periode > 1:
-    st.subheader("📈 Grafik Kekayaan Tiap Tim")
-    fig, ax = plt.subplots()
-    for team in teams:
-        ax.plot(range(1, len(st.session_state.wealth_history[team])+1),
-                st.session_state.wealth_history[team],
-                marker='o', label=team, color=colors[team])
-    ax.set_xlabel("Periode")
-    ax.set_ylabel("Total Kekayaan ($)")
-    ax.legend()
-    st.pyplot(fig)
 
 # Reset button
 if st.button("🔄 Reset Game"):
